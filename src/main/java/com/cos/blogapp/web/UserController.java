@@ -11,33 +11,17 @@ import com.cos.blogapp.domain.user.UserRepository;
 import com.cos.blogapp.web.dto.JoinReqDto;
 import com.cos.blogapp.web.dto.LoginReqDto;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Controller
 public class UserController {
 	
-	private UserRepository userRepository;
-	private HttpSession session;
+	private final UserRepository userRepository;
+	private final HttpSession session;
 	
-	public UserController(UserRepository userRepository, HttpSession session) { // IoC에 담겨있는 클래스 쓰기. 의존성 주입
-		this.userRepository = userRepository;
-		this.session = session;
-	}
 	
-	@GetMapping("/test/query/join")
-	public void testQueryJoin() {
-		userRepository.join("cos","1234","cos@nate.com");
-	}
-	
-	@GetMapping("/test/join")
-	public void testJoin() {
-		User user = new User();
-		user.setUsername("bark");
-		user.setPassword("1234");
-		user.setEmail("bark@naver.com");
-		
-		userRepository.save(user);
-	}
-	
-	@GetMapping("/home")
+	@GetMapping({"/", "/home"})
 	public String home() {
 		return "home";
 	}
@@ -57,8 +41,14 @@ public class UserController {
 	@PostMapping("/login")
 	public String login(LoginReqDto dto) {
 		// 1. username, password 받기
-		System.out.println(dto.getUsername());
-		System.out.println(dto.getPassword());
+		if(dto.getUsername() == null ||
+				dto.getPassword() == null ||
+				!dto.getUsername().equals("") || 
+				!dto.getPassword().equals("")
+				)
+			{
+				return "error/error";
+			}
 		// 2. DB -> SELECT
 		User userEntity = userRepository.mLogin(dto.getUsername(), dto.getPassword());
 		
@@ -75,6 +65,18 @@ public class UserController {
 	
 	@PostMapping("/join")
 	public String join(JoinReqDto dto) {	// username=love&password=1234&email=love@naver.com
+		if(dto.getUsername() == null ||
+			dto.getPassword() == null ||
+			dto.getEmail() == null ||
+			!dto.getUsername().equals("") || 
+			!dto.getPassword().equals("") || 
+			!dto.getEmail().equals("")
+			)
+		{
+			return "error/error";
+		}
+		
+		
 		User user = new User();
 		user.setUsername(dto.getUsername());
 		user.setPassword(dto.getPassword());
