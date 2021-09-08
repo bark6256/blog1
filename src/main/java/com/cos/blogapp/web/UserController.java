@@ -47,7 +47,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public @ResponseBody String login(@Valid LoginReqDto dto, BindingResult bindingResult, Model model) {
+	public @ResponseBody String login(@Valid LoginReqDto dto, BindingResult bindingResult) {
 		// 오류 확인
 		if(bindingResult.hasErrors()) {
 			Map<String, String> errorMap = new HashMap<>();
@@ -56,7 +56,6 @@ public class UserController {
 				System.out.println("필드 : " + error.getField());
 				System.out.println("메시지 : " + error.getDefaultMessage());
 			}
-			model.addAttribute("errorMap", errorMap);
 			return Script.back(errorMap.toString());
 		}
 		// 1. username, password 받기 -> LoginReqDto dto
@@ -75,7 +74,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/join")
-	public @ResponseBody String join(@Valid JoinReqDto dto, BindingResult bindingResult, Model model) {	// username=love&password=1234&email=love@naver.com
+	public @ResponseBody String join(@Valid JoinReqDto dto, BindingResult bindingResult) {	// username=love&password=1234&email=love@naver.com
 		
 		if(bindingResult.hasErrors()) {
 			Map<String, String> errorMap = new HashMap<>();
@@ -84,7 +83,6 @@ public class UserController {
 				System.out.println("필드 : " + error.getField());
 				System.out.println("메시지 : " + error.getDefaultMessage());
 			}
-			model.addAttribute("errorMap", errorMap);
 			return Script.back(errorMap.toString());
 		}
 		
