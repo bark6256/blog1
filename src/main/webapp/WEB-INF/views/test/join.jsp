@@ -7,7 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	에러 터짐
-	${errorMap}
+	<h1>test join page</h1>
 </body>
 </html>

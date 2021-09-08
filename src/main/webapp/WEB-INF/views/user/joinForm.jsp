@@ -6,13 +6,13 @@
 <div class="container">
 	<form action="/join" method="post"> 
 		<div class="form-group">
-			<input type="text" name="username" class="form-control" placeholder="Enter username" required>
+			<input type="text" name="username" class="form-control" placeholder="Enter username" required maxlength="20">
 		</div>
 		<div class="form-group">
-			<input type="password"  name="password" class="form-control"	placeholder="Enter password" required>
+			<input type="password"  name="password" class="form-control"	placeholder="Enter password" required maxlength="20">
 		</div>
 		<div class="form-group">
-			<input type="email"  name="email" class="form-control"	placeholder="Enter email" required>
+			<input type="email"  name="email" class="form-control"	placeholder="Enter email" required maxlength="50">
 		</div>
 		<button type="submit" class="btn btn-primary">회원가입</button>
 	</form>

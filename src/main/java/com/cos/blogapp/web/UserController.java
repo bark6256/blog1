@@ -1,8 +1,15 @@
 package com.cos.blogapp.web;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -19,7 +26,6 @@ public class UserController {
 	
 	private final UserRepository userRepository;
 	private final HttpSession session;
-	
 	
 	@GetMapping({"/", "/home"})
 	public String home() {
@@ -39,16 +45,19 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public String login(LoginReqDto dto) {
-		// 1. username, password 받기
-		if(dto.getUsername() == null ||
-				dto.getPassword() == null ||
-				!dto.getUsername().equals("") || 
-				!dto.getPassword().equals("")
-				)
-			{
-				return "error/error";
+	public String login(@Valid LoginReqDto dto, BindingResult bindingResult, Model model) {
+		// 오류 확인
+		if(bindingResult.hasErrors()) {
+			Map<String, String> errorMap = new HashMap<>();
+			for( FieldError error : bindingResult.getFieldErrors() ) {
+				errorMap.put(error.getField(), error.getDefaultMessage());
+				System.out.println("필드 : " + error.getField());
+				System.out.println("메시지 : " + error.getDefaultMessage());
 			}
+			model.addAttribute("errorMap", errorMap);
+			return "error/error";
+		}
+		// 1. username, password 받기 -> LoginReqDto dto
 		// 2. DB -> SELECT
 		User userEntity = userRepository.mLogin(dto.getUsername(), dto.getPassword());
 		
@@ -64,25 +73,20 @@ public class UserController {
 	}
 	
 	@PostMapping("/join")
-	public String join(JoinReqDto dto) {	// username=love&password=1234&email=love@naver.com
-		if(dto.getUsername() == null ||
-			dto.getPassword() == null ||
-			dto.getEmail() == null ||
-			!dto.getUsername().equals("") || 
-			!dto.getPassword().equals("") || 
-			!dto.getEmail().equals("")
-			)
-		{
+	public String join(@Valid JoinReqDto dto, BindingResult bindingResult, Model model) {	// username=love&password=1234&email=love@naver.com
+		
+		if(bindingResult.hasErrors()) {
+			Map<String, String> errorMap = new HashMap<>();
+			for( FieldError error : bindingResult.getFieldErrors() ) {
+				errorMap.put(error.getField(), error.getDefaultMessage());
+				System.out.println("필드 : " + error.getField());
+				System.out.println("메시지 : " + error.getDefaultMessage());
+			}
+			model.addAttribute("errorMap", errorMap);
 			return "error/error";
 		}
 		
-		
-		User user = new User();
-		user.setUsername(dto.getUsername());
-		user.setPassword(dto.getPassword());
-		user.setEmail(dto.getEmail());
-		
-		userRepository.save(user);
+		userRepository.save(dto.toEntity());
 		return "redirect:/loginForm"; // 리다이렉션 (http 상태코드 300)
 	}
 }

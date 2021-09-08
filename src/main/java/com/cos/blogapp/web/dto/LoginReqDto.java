@@ -1,5 +1,9 @@
 package com.cos.blogapp.web.dto;
 
+import javax.persistence.Column;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +13,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor		// 전체 생성자
 @NoArgsConstructor		// 기본 생성자
 public class LoginReqDto {
+	@Size(min = 2, max = 20)
+	@NotBlank
 	private String username;
+	@Size(min = 4, max = 20)
+	@NotBlank
 	private String password;
 }
