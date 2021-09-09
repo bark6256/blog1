@@ -7,7 +7,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,12 +27,7 @@ public class UserController {
 	
 	private final UserRepository userRepository;
 	private final HttpSession session;
-	
-	@GetMapping({"/", "/home"})
-	public String home() {
-		return "home";
-	}
-	
+		
 	//http://localhost:8080/login -> login.jsp
 	// views/user/login.jsp
 	@GetMapping("/loginForm")
