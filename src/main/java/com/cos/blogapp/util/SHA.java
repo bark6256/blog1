@@ -3,7 +3,7 @@ package com.cos.blogapp.util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class SHA256 {
+public class SHA {
 	public static String encrypt(String rawPassword, MyAlgorithm algorithm){
 		// 1. SHA256 함수를 가진 클래스 객체 가져오기
 		MessageDigest md = null;

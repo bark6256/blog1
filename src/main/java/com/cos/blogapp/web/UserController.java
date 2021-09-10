@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cos.blogapp.domain.user.User;
 import com.cos.blogapp.domain.user.UserRepository;
 import com.cos.blogapp.util.MyAlgorithm;
-import com.cos.blogapp.util.SHA256;
+import com.cos.blogapp.util.SHA;
 import com.cos.blogapp.util.Script;
 import com.cos.blogapp.web.dto.JoinReqDto;
 import com.cos.blogapp.web.dto.LoginReqDto;
@@ -55,7 +55,7 @@ public class UserController {
 			return Script.back(errorMap.toString());
 		}
 		// 1. username, password 받기 -> LoginReqDto dto
-		String encPassowrd = SHA256.encrypt(dto.getPassword(), MyAlgorithm.SHA256);
+		String encPassowrd = SHA.encrypt(dto.getPassword(), MyAlgorithm.SHA256);
 		dto.setPassword(encPassowrd);
 		// 2. DB -> SELECT
 		User userEntity = userRepository.mLogin(dto.getUsername(), dto.getPassword());
@@ -63,6 +63,7 @@ public class UserController {
 		if(userEntity == null) { // 로그인 실패
 			return Script.back("아이디와 암호가 틀렸습니다.");
 		} else {								// 로그인 성공
+			// 세션 날라가는 조건 : 1.swssion.invalidate() 2. 브라우저 닫기
 			session.setAttribute("principal", userEntity); // principal : 인증된 사용자.
 			return Script.href("/","로그인 성공");
 		}
@@ -84,7 +85,7 @@ public class UserController {
 			return Script.back(errorMap.toString());
 		}
 		
-		String encPassowrd = SHA256.encrypt(dto.getPassword(), MyAlgorithm.SHA256);
+		String encPassowrd = SHA.encrypt(dto.getPassword(), MyAlgorithm.SHA256);
 		dto.setPassword(encPassowrd);
 		
 		userRepository.save(dto.toEntity());
