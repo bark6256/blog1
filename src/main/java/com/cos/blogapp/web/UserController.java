@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cos.blogapp.domain.user.User;
 import com.cos.blogapp.domain.user.UserRepository;
+import com.cos.blogapp.util.MyAlgorithm;
+import com.cos.blogapp.util.SHA256;
 import com.cos.blogapp.util.Script;
 import com.cos.blogapp.web.dto.JoinReqDto;
 import com.cos.blogapp.web.dto.LoginReqDto;
@@ -42,7 +44,7 @@ public class UserController {
 	
 	@PostMapping("/login")
 	public @ResponseBody String login(@Valid LoginReqDto dto, BindingResult bindingResult) {
-		// 오류 확인
+		// 최소 입력 조건 확인
 		if(bindingResult.hasErrors()) {
 			Map<String, String> errorMap = new HashMap<>();
 			for( FieldError error : bindingResult.getFieldErrors() ) {
@@ -53,6 +55,8 @@ public class UserController {
 			return Script.back(errorMap.toString());
 		}
 		// 1. username, password 받기 -> LoginReqDto dto
+		String encPassowrd = SHA256.encrypt(dto.getPassword(), MyAlgorithm.SHA256);
+		dto.setPassword(encPassowrd);
 		// 2. DB -> SELECT
 		User userEntity = userRepository.mLogin(dto.getUsername(), dto.getPassword());
 		
@@ -79,6 +83,9 @@ public class UserController {
 			}
 			return Script.back(errorMap.toString());
 		}
+		
+		String encPassowrd = SHA256.encrypt(dto.getPassword(), MyAlgorithm.SHA256);
+		dto.setPassword(encPassowrd);
 		
 		userRepository.save(dto.toEntity());
 		return Script.href("/joinForm"); // 리다이렉션 (http 상태코드 300)
