@@ -32,14 +32,35 @@ public class UserController {
 		
 	//http://localhost:8080/login -> login.jsp
 	// views/user/login.jsp
-	@GetMapping("/loginForm")
-	public String loginForm() {
-		return "user/loginForm";
-	}
 	
-	@GetMapping("/joinForm")
+	@GetMapping("/joinForm")         // --------------- 회원가입 --------------
 	public String joinForm() {
 		return "user/joinForm";
+	}
+	
+	@PostMapping("/join")
+	public @ResponseBody String join(@Valid JoinReqDto dto, BindingResult bindingResult) {	// username=love&password=1234&email=love@naver.com
+		
+		if(bindingResult.hasErrors()) {
+			Map<String, String> errorMap = new HashMap<>();
+			for( FieldError error : bindingResult.getFieldErrors() ) {
+				errorMap.put(error.getField(), error.getDefaultMessage());
+				System.out.println("필드 : " + error.getField());
+				System.out.println("메시지 : " + error.getDefaultMessage());
+			}
+			return Script.back(errorMap.toString());
+		}
+		
+		String encPassowrd = SHA.encrypt(dto.getPassword(), MyAlgorithm.SHA256);
+		dto.setPassword(encPassowrd);
+		
+		userRepository.save(dto.toEntity());
+		return Script.href("/joinForm"); // 리다이렉션 (http 상태코드 300)
+	}
+	
+	@GetMapping("/loginForm")		//------------- 로그인 ---------------
+	public String loginForm() {
+		return "user/loginForm";
 	}
 	
 	@PostMapping("/login")
@@ -72,23 +93,9 @@ public class UserController {
 		// 3-2 : main페이지 돌려주기
 	}
 	
-	@PostMapping("/join")
-	public @ResponseBody String join(@Valid JoinReqDto dto, BindingResult bindingResult) {	// username=love&password=1234&email=love@naver.com
-		
-		if(bindingResult.hasErrors()) {
-			Map<String, String> errorMap = new HashMap<>();
-			for( FieldError error : bindingResult.getFieldErrors() ) {
-				errorMap.put(error.getField(), error.getDefaultMessage());
-				System.out.println("필드 : " + error.getField());
-				System.out.println("메시지 : " + error.getDefaultMessage());
-			}
-			return Script.back(errorMap.toString());
-		}
-		
-		String encPassowrd = SHA.encrypt(dto.getPassword(), MyAlgorithm.SHA256);
-		dto.setPassword(encPassowrd);
-		
-		userRepository.save(dto.toEntity());
-		return Script.href("/joinForm"); // 리다이렉션 (http 상태코드 300)
+	@GetMapping("/logout")
+	public String logout() {
+		session.invalidate();	// 세션에 있는 값 초기화
+		return "redirect:/";
 	}
 }

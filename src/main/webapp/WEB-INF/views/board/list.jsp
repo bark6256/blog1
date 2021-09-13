@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%@ include file="../layout/header.jsp"%>
 
 <div class="container">
 
+	<!-- boardsEntity -> pageScope에 있음. -->
 	<c:forEach var="board" items="${boardsEntity.content}">
 		<!-- 카드 글 시작 -->
 		<div class="card">
