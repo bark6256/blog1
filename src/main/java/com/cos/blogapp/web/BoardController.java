@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -67,14 +68,28 @@ public class BoardController {
 			return Script.back(errorMap.toString());
 		}
 		
-		System.out.println(dto.getTitle());
-		System.out.println(dto.getContent());
 		
-//		User user = new User();
-//		user.setId(3);
-//		boardRepository.save(dto.toEntity(user));
+	//	User user = new User();
+	//	user.setId(3);
+	//	boardRepository.save(dto.toEntity(user));
 		
 		boardRepository.save(dto.toEntity(principal));
 		return Script.href("/", "글쓰기 성공");
+	}
+	
+	// 1. 컨트롤러 선정,
+	// 2. http method 선정,
+	// 3. 받을 데이터가 있는지(body, queryString, pathVariable)
+	// 쿼리스트링 : board?----  ? 이후의 내용으로 전달(get)
+	// queryString, pathVariable -> DB의 where에 걸리는 내용
+	// POST는 3종류 다 받을수 있음.
+	// 4. DB에 접근을 해야하면 Model에 접근. 아니면 접근할 필요가 없다.
+	@GetMapping("/board/{id}")
+	public String detail(@PathVariable int id, Model model) {
+		// Model 클래스는 requestScope 저장영역
+		Board boardEntity = boardRepository.findById(id).get();
+		// DB에서 가져온 데이터는 Entity를 붙혀놓자(우리만의 약속)
+		model.addAttribute("boardEntity", boardEntity);
+		return "board/detail";
 	}
 }
