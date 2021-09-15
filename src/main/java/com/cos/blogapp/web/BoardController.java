@@ -2,6 +2,7 @@ package com.cos.blogapp.web;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -86,9 +87,15 @@ public class BoardController {
 	// 4. DB에 접근을 해야하면 Model에 접근. 아니면 접근할 필요가 없다.
 	@GetMapping("/board/{id}")
 	public String detail(@PathVariable int id, Model model) {
-		// Model 클래스는 requestScope 저장영역
-		Board boardEntity = boardRepository.findById(id).get();
-		// DB에서 가져온 데이터는 Entity를 붙혀놓자(우리만의 약속)
+		// 1. orElse 는 값을 찾으면 Board가 리턴, 못찾으면 (괄호안의 내용 리턴)
+		//   default값이 필요하다면 orElse를 쓴다.
+//		Board boardEntity = boardRepository.findById(id)
+//				.orElse(new Board());
+		
+		// 2. orElseThrow 익셉션 발생시 이 함수를 호출한곳으로 오류 메시지를 던져준다.
+		//     컨트롤러를 호출한 곳 - 디스페쳐 서블릿이 받는다.
+		Board boardEntity = boardRepository.findById(id)
+				.orElseThrow();
 		model.addAttribute("boardEntity", boardEntity);
 		return "board/detail";
 	}
