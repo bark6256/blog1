@@ -96,12 +96,10 @@ public class BoardController {
 		// 2. orElseThrow 익셉션 발생시 이 함수를 호출한곳으로 오류 메시지를 던져준다.
 		//     컨트롤러를 호출한 곳 - 디스페쳐 서블릿이 받는다.
 		Board boardEntity = boardRepository.findById(id)
-				.orElseThrow(new Supplier<MyNotFoundException>() {
-					@Override
-					public MyNotFoundException get() {
-						return new MyNotFoundException(id + "를 찾을수 없습니다.");
-					}
-				});
+				.orElseThrow(() -> 
+					new MyNotFoundException(id + "번은 없는 게시글입니다")
+				);
+		
 		model.addAttribute("boardEntity", boardEntity);
 		return "board/detail";
 	}
