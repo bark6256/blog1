@@ -2,7 +2,7 @@ package com.cos.blogapp.web;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+import java.util.function.Supplier;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cos.blogapp.domain.board.Board;
 import com.cos.blogapp.domain.board.BoardRepository;
 import com.cos.blogapp.domain.user.User;
+import com.cos.blogapp.handler.ex.MyNotFoundException;
 import com.cos.blogapp.util.Script;
 import com.cos.blogapp.web.dto.BoardSaveReqDto;
 
@@ -95,7 +96,12 @@ public class BoardController {
 		// 2. orElseThrow 익셉션 발생시 이 함수를 호출한곳으로 오류 메시지를 던져준다.
 		//     컨트롤러를 호출한 곳 - 디스페쳐 서블릿이 받는다.
 		Board boardEntity = boardRepository.findById(id)
-				.orElseThrow();
+				.orElseThrow(new Supplier<MyNotFoundException>() {
+					@Override
+					public MyNotFoundException get() {
+						return new MyNotFoundException(id + "를 찾을수 없습니다.");
+					}
+				});
 		model.addAttribute("boardEntity", boardEntity);
 		return "board/detail";
 	}

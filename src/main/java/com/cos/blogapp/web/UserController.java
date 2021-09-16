@@ -55,7 +55,7 @@ public class UserController {
 		dto.setPassword(encPassowrd);
 		
 		userRepository.save(dto.toEntity());
-		return Script.href("/joinForm"); // 리다이렉션 (http 상태코드 300)
+		return Script.href("/loginForm"); // 리다이렉션 (http 상태코드 300)
 	}
 	
 	@GetMapping("/loginForm")		//------------- 로그인 ---------------

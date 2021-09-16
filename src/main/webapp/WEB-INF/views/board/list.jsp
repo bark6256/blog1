@@ -25,16 +25,16 @@
 			<c:choose>
 				<c:when test="${boardsEntity.first}">
 					<li class="page-item disabled"><a class="page-link" href="/board?page=${boardsEntity.number - 1 }">Prev</a></li>
-					<li class="page-item"><a class="page-link" href="/board?page=${param.page + 1}">Next</a></li>
 				</c:when>
-				
-				<c:when test="${boardsEntity.last}">
-					<li class="page-item"><a class="page-link" href="/board?page=${boardsEntity.number - 1 }">Prev</a></li>
-					<li class="page-item disabled"><a class="page-link" href="/board?page=${param.page + 1}">Next</a></li>
-				</c:when>
-				
 				<c:otherwise>
 					<li class="page-item"><a class="page-link" href="/board?page=${boardsEntity.number - 1 }">Prev</a></li>
+				</c:otherwise>
+			</c:choose>
+			<c:choose>
+				<c:when test="${boardsEntity.last}">
+					<li class="page-item disabled"><a class="page-link" href="/board?page=${param.page + 1}">Next</a></li>
+				</c:when>
+				<c:otherwise>
 					<li class="page-item"><a class="page-link" href="/board?page=${param.page + 1}">Next</a></li>
 				</c:otherwise>
 			</c:choose>
