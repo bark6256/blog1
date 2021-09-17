@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -97,5 +98,14 @@ public class UserController {
 	public String logout() {
 		session.invalidate();	// 세션에 있는 값 초기화
 		return "redirect:/";
+	}
+	
+	// {id} : 페스벨리어블, 주소에서 값을 가져온다.
+	@GetMapping("/user/{id}")
+	public String userInfo(@PathVariable int id) {
+		// 기본은 userRepository.findById(id) 디비에서 가져와야 한다.
+		// 편법으로 세션값을 가져오는 방법도 있다.
+		
+		return "user/updateForm";
 	}
 }
