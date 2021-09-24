@@ -2,7 +2,6 @@ package com.cos.blogapp.web;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cos.blogapp.domain.board.Board;
 import com.cos.blogapp.domain.board.BoardRepository;
 import com.cos.blogapp.domain.user.User;
+import com.cos.blogapp.handler.ex.MyAsyncNotException;
 import com.cos.blogapp.handler.ex.MyNotFoundException;
 import com.cos.blogapp.util.Script;
 import com.cos.blogapp.web.dto.BoardSaveReqDto;
+import com.cos.blogapp.web.dto.CMRespDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -88,10 +90,11 @@ public class BoardController {
 	// 4. DB에 접근을 해야하면 Model에 접근. 아니면 접근할 필요가 없다.
 	@GetMapping("/board/{id}")
 	public String detail(@PathVariable int id, Model model) {
-		// 1. orElse 는 값을 찾으면 Board가 리턴, 못찾으면 (괄호안의 내용 리턴)
-		//   default값이 필요하다면 orElse를 쓴다.
-//		Board boardEntity = boardRepository.findById(id)
-//				.orElse(new Board());
+		/*
+		 *  1. orElse 는 값을 찾으면 Board가 리턴, 못찾으면 (괄호안의 내용 리턴)
+		 *  default값이 필요하다면 orElse를 쓴다.
+		 *  Board boardEntity = boardRepository.findById(id).orElse(new Board());
+		 */
 		
 		// 2. orElseThrow 익셉션 발생시 이 함수를 호출한곳으로 오류 메시지를 던져준다.
 		//     컨트롤러를 호출한 곳 - 디스페쳐 서블릿이 받는다.
@@ -102,5 +105,17 @@ public class BoardController {
 		
 		model.addAttribute("boardEntity", boardEntity);
 		return "board/detail";
+	}
+	
+	@DeleteMapping("/board/{id}")
+	public @ResponseBody CMRespDto<String> deleteById(@PathVariable int id) {
+		try {
+			boardRepository.deleteById(id);
+		} catch (Exception e) {
+			throw new MyAsyncNotException(id + "를 찾을 수 없어 삭제가 불가능합니다.");
+		}
+		
+		
+		return new CMRespDto<String>(1,null); // @ResponseBody 데이터 리턴!! String = text/plain
 	}
 }
