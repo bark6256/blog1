@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.cos.blogapp.handler.ex.MyAsyncNotException;
+import com.cos.blogapp.handler.ex.MyAsyncNotFoundException;
 import com.cos.blogapp.handler.ex.MyNotFoundException;
 import com.cos.blogapp.util.Script;
 import com.cos.blogapp.web.dto.CMRespDto;
@@ -21,11 +21,11 @@ public class GlobalExceptionHandler {
 		return Script.href("/", e.getMessage());
 	}
 	
-	@ExceptionHandler(value = MyAsyncNotException.class)
-	public @ResponseBody CMRespDto<String> error2(MyAsyncNotException e) {
+	@ExceptionHandler(value = MyAsyncNotFoundException.class)
+	public @ResponseBody CMRespDto<String> error2(MyAsyncNotFoundException e) {
 		System.out.println("오류 발생");
 		System.out.println(e.getMessage());
 		
-		return new CMRespDto<String>(-1, null);
+		return new CMRespDto<String>(-1, e.getMessage(), null);
 	}
 }

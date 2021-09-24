@@ -19,7 +19,7 @@
 				console.log(parseResponse);
 				
 				if(parseResponse.code == -1){
-					alert("삭제 실패");
+					alert(parseResponse.msg);
 					location.href="/";
 				} else {
 					alert("삭제 성공");
