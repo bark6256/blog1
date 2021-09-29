@@ -21,6 +21,7 @@ public class GlobalExceptionHandler {
 		return Script.href("/", e.getMessage());
 	}
 	
+	// fetch 요청
 	@ExceptionHandler(value = MyAsyncNotFoundException.class)
 	public @ResponseBody CMRespDto<String> error2(MyAsyncNotFoundException e) {
 		System.out.println("오류 발생");

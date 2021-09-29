@@ -45,6 +45,28 @@ public class BoardController {
 		
 		User principal = (User) session.getAttribute("principal");
 		
+		// 유효성 검사
+		if (bindingResult.hasErrors()) {
+			Map<String, String> errorMap = new HashMap<>();
+			for (FieldError error : bindingResult.getFieldErrors()) {
+				errorMap.put(error.getField(), error.getDefaultMessage());
+			}
+			throw new MyAsyncNotFoundException(errorMap.toString());
+		}
+		
+		// 인증 (공통로직)
+		if (principal == null) { // 로그인 안됨
+			throw new MyAsyncNotFoundException("인증이 되지 않았습니다");
+		}
+		
+		// 권한
+		Board boardEntity = boardRepository.findById(id)
+				.orElseThrow(()-> new MyAsyncNotFoundException("해당 게시글을 찾을 수 없습니다."));
+		if(principal.getId() != boardEntity.getUser().getId()) {
+			throw new MyAsyncNotFoundException("해당 게시글의 주인이 아닙니다.");
+		}
+		
+		
 		Board board = dto.toEntity(principal);
 		board.setId(id);
 		
