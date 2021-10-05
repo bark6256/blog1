@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 
 <%@ include file="../layout/header.jsp"%>
 
@@ -29,46 +30,52 @@
 			}	
 		}		
 	</script>
-	
-   <br /><br />
-   <div>
-      글 번호 : ${boardEntity.id}</span> 작성자 : <span><i>${boardEntity.user.username}</i></span>
-   </div>
-   <br />
-   <div>
-      <h3>${boardEntity.title}</h3>
-   </div>
-   <hr />
-   <div>
-      <div>${boardEntity.content}</div>
-   </div>
-   <hr />
 
-   <div class="card">
-      <form>
-         <div class="card-body">
-            <textarea name="content" class="form-control" rows="1"></textarea>
-         </div>
-         <div class="card-footer">
-            <button type="submit" id="btn-reply-save" class="btn btn-primary">등록</button>
-         </div>
-      </form>
-   </div>
-   <br />
-   
-   <div class="card">
-      <div class="card-header"><b>댓글 리스트</b></div>
-      <ul id="reply-box" class="list-group">
-         <li id="reply-1" class="list-group-item d-flex justify-content-between">
-            <div>댓글입니다</div>
-            <div class="d-flex">
-               <div class="font-italic">작성자 : 홍길동 &nbsp;</div>
-               <button class="badge">삭제</button>
-            </div>
-         </li>
-      </ul>
-   </div>
-   <br/>
+	<br />
+	<br />
+	<div>
+		<span>글 번호 : ${boardEntity.id}</span> 작성자 : <span><i>${boardEntity.user.username}</i></span>
+	</div>
+	<br />
+	<div>
+		<h3>${boardEntity.title}</h3>
+	</div>
+	<hr />
+	<div>
+		<div>${boardEntity.content}</div>
+	</div>
+	<hr />
+
+	<div class="card">
+		<!-- 댓글 쓰기 시작 -->
+		<form action="/board/${boardEntity.id}/comment" method="post">
+			<div class="card-body">
+				<textarea name="content" class="form-control" rows="1"></textarea>
+			</div>
+			<div class="card-footer">
+				<button type="submit" id="btn-reply-save" class="btn btn-primary">등록</button>
+			</div>
+		</form>
+		<!-- 댓글 쓰기 끝 -->
+	</div>
+	<br />
+
+	<div class="card">
+		<div class="card-header">
+			<b>댓글 리스트</b>
+		</div>
+		<ul id="reply-box" class="list-group">
+			<li id="reply-1"
+				class="list-group-item d-flex justify-content-between">
+				<div>댓글입니다</div>
+				<div class="d-flex">
+					<div class="font-italic">작성자 : 홍길동 &nbsp;</div>
+					<button class="badge">삭제</button>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<br />
 </div>
 
 <%@ include file="../layout/footer.jsp"%>

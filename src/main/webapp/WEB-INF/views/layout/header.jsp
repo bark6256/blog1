@@ -44,5 +44,3 @@
 	</nav>
 	<br>
 	<!-- 네브바 끝 -->
-
-	${sessionScope.principal.username}

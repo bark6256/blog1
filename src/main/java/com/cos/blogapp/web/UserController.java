@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cos.blogapp.domain.user.User;
-import com.cos.blogapp.domain.user.UserRepository;
 import com.cos.blogapp.handler.ex.MyAsyncNotFoundException;
-import com.cos.blogapp.util.MyAlgorithm;
-import com.cos.blogapp.util.SHA;
+import com.cos.blogapp.service.UserService;
 import com.cos.blogapp.util.Script;
 import com.cos.blogapp.web.dto.CMRespDto;
 import com.cos.blogapp.web.dto.JoinReqDto;
@@ -33,12 +31,13 @@ import lombok.RequiredArgsConstructor;
 @Controller
 public class UserController {
 	
-	private final UserRepository userRepository;
+	private final UserService userService;
 	private final HttpSession session;
 	
+	// ---- 유저정보수정
 	@PutMapping("/user/{id}")
-	public @ResponseBody CMRespDto<String> update(@PathVariable int id, @Valid @RequestBody UserUpdateDto dto,
-			BindingResult bindingResult) {
+	public @ResponseBody CMRespDto<String> update(@PathVariable int id,
+			@Valid @RequestBody UserUpdateDto dto, BindingResult bindingResult) {
 		// 유효성
 		if (bindingResult.hasErrors()) {
 			Map<String, String> errorMap = new HashMap<>();
@@ -60,19 +59,19 @@ public class UserController {
 		}
 
 		// 핵심로직
-		principal.setEmail(dto.getEmail());
+		userService.유저정보수정(dto, principal);
 		session.setAttribute("principal", principal); // 세션 값 변경
-
-		userRepository.save(principal);
-
+		
 		return new CMRespDto<>(1, "성공", null);
 	}
 	
-	@GetMapping("/joinForm")         // --------------- 회원가입 --------------
+	// ---- 회원가입 페이지 이동
+	@GetMapping("/joinForm")
 	public String joinForm() {
 		return "user/joinForm";
 	}
 	
+	// ---- 회원가입
 	@PostMapping("/join")
 	public @ResponseBody String join(@Valid JoinReqDto dto, BindingResult bindingResult) {	// username=love&password=1234&email=love@naver.com
 		
@@ -86,18 +85,18 @@ public class UserController {
 			return Script.back(errorMap.toString());
 		}
 		
-		String encPassowrd = SHA.encrypt(dto.getPassword(), MyAlgorithm.SHA256);
-		dto.setPassword(encPassowrd);
-		
-		userRepository.save(dto.toEntity());
+		userService.회원가입(dto);
+
 		return Script.href("/loginForm"); // 리다이렉션 (http 상태코드 300)
 	}
 	
-	@GetMapping("/loginForm")		//------------- 로그인 ---------------
+	// ---- 로그인 페이지 이동
+	@GetMapping("/loginForm")
 	public String loginForm() {
 		return "user/loginForm";
 	}
 	
+	// ---- 로그인
 	@PostMapping("/login")
 	public @ResponseBody String login(@Valid LoginReqDto dto, BindingResult bindingResult) {
 		// 최소 입력 조건 확인
@@ -110,11 +109,8 @@ public class UserController {
 			}
 			return Script.back(errorMap.toString());
 		}
-		// 1. username, password 받기 -> LoginReqDto dto
-		String encPassowrd = SHA.encrypt(dto.getPassword(), MyAlgorithm.SHA256);
-		dto.setPassword(encPassowrd);
-		// 2. DB -> SELECT
-		User userEntity = userRepository.mLogin(dto.getUsername(), dto.getPassword());
+		
+		User userEntity = userService.로그인(dto);
 		
 		if(userEntity == null) { // 로그인 실패
 			return Script.back("아이디와 암호가 틀렸습니다.");
@@ -128,12 +124,14 @@ public class UserController {
 		// 3-2 : main페이지 돌려주기
 	}
 	
+	// ---- 로그아웃
 	@GetMapping("/logout")
 	public String logout() {
 		session.invalidate();	// 세션에 있는 값 초기화
 		return "redirect:/";
 	}
 	
+	// ---- 유저정보보기
 	// {id} : 페스벨리어블, 주소에서 값을 가져온다.
 	@GetMapping("/user/{id}")
 	public String userInfo(@PathVariable int id) {

@@ -9,10 +9,10 @@
 			<input type="text" name="username" class="form-control" placeholder="Enter username" required maxlength="20">
 		</div>
 		<div class="form-group">
-			<input type="password"  name="password" class="form-control"	placeholder="Enter password" required maxlength="20">
+			<input type="password"  name="password" class="form-control" placeholder="Enter password" required maxlength="20">
 		</div>
 		<div class="form-group">
-			<input type="email"  name="email" class="form-control"	placeholder="Enter email" required maxlength="50">
+			<input type="email"  name="email" class="form-control" placeholder="Enter email" required maxlength="50">
 		</div>
 		<button type="submit" class="btn btn-primary">회원가입</button>
 	</form>
