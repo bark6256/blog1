@@ -50,12 +50,10 @@ public class BoardService {
 			throw new MyAsyncNotFoundException("해당 게시글의 주인이 아닙니다.");
 		}
 		
-		
-		Board board = dto.toEntity(principal);
-		board.setId(id);
-		
-		boardRepository.save(board);
-	}
+		// 영속화된 데이터를 변경하면!!
+		boardEntity.setTitle(dto.getTitle());
+		boardEntity.setContent(dto.getContent());
+	} // 트랜잭션 종료 (더티체킹)
 	
 	public Board 게시글수정페이지이동(int id) {
 		Board boardEntity = boardRepository.findById(id)

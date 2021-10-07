@@ -25,9 +25,9 @@ public class UserService {
 	
 	@Transactional(rollbackFor = MyAsyncNotFoundException.class)
 	public void 유저정보수정(UserUpdateDto dto, User principal) {
-		principal.setEmail(dto.getEmail());
-
-		userRepository.save(principal);
+		User userEntity = userRepository.findById(principal.getId())
+				.orElseThrow(()-> new MyAsyncNotFoundException("회원정보를 찾을 수 없습니다."));
+		userEntity.setEmail(dto.getEmail());
 	}
 	
 	@Transactional(rollbackFor = MyNotFoundException.class)
