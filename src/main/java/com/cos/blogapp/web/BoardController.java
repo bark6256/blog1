@@ -114,9 +114,10 @@ public class BoardController {
 		
 		// 2. orElseThrow 익셉션 발생시 이 함수를 호출한곳으로 오류 메시지를 던져준다.
 		//     컨트롤러를 호출한 곳 - 디스페쳐 서블릿이 받는다.
-		
+
+		// Board 객체에 존재하는 것 (Board(0), User(0), List<Comment>(x))
 		model.addAttribute("boardEntity", boardService.게시글상세보기(id));
-		return "board/detail";
+		return "board/detail"; // ViewResolver
 	}
 	
 	// ---- 게시글 쓰기 페이지 이동
