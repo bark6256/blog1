@@ -29,7 +29,7 @@
 			// JSON.stringify(자바스크립트 오브젝트) => 리턴 json 문자열
             // JSON.parse(제이슨 문자열) => 리턴 자바스크립트 함수
 
-			let response = await fetch("http://localhost:8080/board/" + id,{
+			let response = await fetch("http://localhost:8080/api/board/" + id,{
 				method: "put",
 				body: JSON.stringify(boardUpdateDto),
 				headers:{

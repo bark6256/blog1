@@ -15,8 +15,7 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(value = MyNotFoundException.class)
 	public @ResponseBody String error1(MyNotFoundException e) {
-		System.out.println("오류 발생");
-		System.out.println(e.getMessage());
+		System.out.println("오류 발생 : " + e.getMessage());
 		
 		return Script.href("/", e.getMessage());
 	}

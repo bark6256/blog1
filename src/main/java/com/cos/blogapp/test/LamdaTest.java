@@ -10,14 +10,14 @@ interface MySupplier {
 }
 public class LamdaTest {
 	
-	static void start(MySupplier s) {
-		s.get();
-	}
-	
-	public static void main(String[] args) {
-		
-		start(  () -> {
-				System.out.println("get 함수 호출됨");
-		});
-	}
+//	static void start(MySupplier s) {
+//		s.get();
+//	}
+//	
+//	public static void main(String[] args) {
+//		
+//		start(  () -> {
+//				System.out.println("get 함수 호출됨");
+//		});
+//	}
 }

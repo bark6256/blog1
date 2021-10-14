@@ -35,9 +35,10 @@ public class UserController {
 	private final HttpSession session;
 	
 	// ---- 유저정보수정
-	@PutMapping("/user/{id}")
+	@PutMapping("/api/user/{id}")
 	public @ResponseBody CMRespDto<String> update(@PathVariable int id,
 			@Valid @RequestBody UserUpdateDto dto, BindingResult bindingResult) {
+		User principal = (User) session.getAttribute("principal");
 		// 유효성
 		if (bindingResult.hasErrors()) {
 			Map<String, String> errorMap = new HashMap<>();
@@ -45,12 +46,6 @@ public class UserController {
 				errorMap.put(error.getField(), error.getDefaultMessage());
 			}
 			throw new MyAsyncNotFoundException(errorMap.toString());
-		}
-
-		// 인증
-		User principal = (User) session.getAttribute("principal");
-		if (principal == null) { // 로그인 안됨
-			throw new MyAsyncNotFoundException("인증이 되지 않았습니다.");
 		}
 
 		// 권한
@@ -135,7 +130,7 @@ public class UserController {
 	
 	// ---- 유저정보보기
 	// {id} : 페스벨리어블, 주소에서 값을 가져온다.
-	@GetMapping("/user/{id}")
+	@GetMapping("/api/user/{id}")
 	public String userInfo(@PathVariable int id) {
 		// 기본은 userRepository.findById(id) 디비에서 가져와야 한다.
 		// 편법으로 세션값을 가져오는 방법도 있다.

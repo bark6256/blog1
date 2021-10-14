@@ -8,13 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cos.blogapp.domain.board.Board;
 import com.cos.blogapp.domain.board.BoardRepository;
-import com.cos.blogapp.domain.comment.Comment;
 import com.cos.blogapp.domain.comment.CommentRepository;
 import com.cos.blogapp.domain.user.User;
 import com.cos.blogapp.handler.ex.MyAsyncNotFoundException;
 import com.cos.blogapp.handler.ex.MyNotFoundException;
 import com.cos.blogapp.web.dto.BoardSaveReqDto;
-import com.cos.blogapp.web.dto.CommentSaveReqDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,21 +22,6 @@ public class BoardService {
 
 	// 생성자 주입(DI)
 	private final BoardRepository boardRepository;
-	private final CommentRepository commentRepository;
-	
-	@Transactional
-	public void 댓글작성(int boardId, CommentSaveReqDto dto, User principal) {
-		Board boardEntity = boardRepository.findById(boardId)
-				.orElseThrow(()-> new MyNotFoundException("해당 게시글을 찾을 수 없습니다."));
-
-		Comment comment = new Comment();
-		comment.setContent(dto.getContent());
-		comment.setUser(principal);
-		comment.setBoard(boardEntity);
-
-		// 4. save 하기
-		commentRepository.save(comment);
-	}
 	
 	@Transactional
 	public void 게시글수정(int id, User principal, BoardSaveReqDto dto) {

@@ -17,6 +17,9 @@
 </head>
 <body>
 
+	<script>
+		let globalUserId = "${sessionScope.principal.id}"
+	</script>
 	<!-- 네브바 시작 -->
 	<nav class="navbar navbar-expand-md bg-dark navbar-dark">
 		<a class="navbar-brand" href="/">블로그</a>
@@ -34,7 +37,7 @@
 					</c:when>
 					<c:otherwise>
 						<li class="nav-item"><a class="nav-link" href="/board/saveForm">글쓰기</a></li>
-						<li class="nav-item"><a class="nav-link" href="/user/${sessionScope.principal.id}">회원정보</a></li>
+						<li class="nav-item"><a class="nav-link" href="/api/user/${sessionScope.principal.id}">회원정보</a></li>
 						<li class="nav-item"><a class="nav-link" href="/logout">로그아웃</a></li>
 					
 					</c:otherwise>
